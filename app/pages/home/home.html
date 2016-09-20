@@ -8,8 +8,16 @@
 </ion-header>
 
 
-<ion-content padding class="home">
-  <div #map id='map'></div>
-  
-
+<ion-content padding class="home">     
+  <ion-fixed class="fixed-div">
+    <button fab fab-right fab-bottom fab-fixed class="fab-bottom" (click)="changeView()">
+      <ion-icon name="map"></ion-icon>
+    </button>
+  </ion-fixed>
+  <div #map id='map'  *ngIf="showMap">
+    
+  </div>
+  <!--<button fab fab-bottom fab-right fab-fixed class="fab-bottom" (click)="changeView()">
+    <ion-icon name="map"></ion-icon>    
+  </button>-->
 </ion-content>

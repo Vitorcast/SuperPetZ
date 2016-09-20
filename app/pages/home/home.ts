@@ -25,6 +25,8 @@ export class HomePage {
 
   changeView() {
     this.showMap = !this.showMap;
+    console.log('Mudou');
+    console.log(this.showMap);
   }
 
   loadGoogleMaps() {
@@ -35,7 +37,7 @@ export class HomePage {
       this.disableMap();
 
       if (this.connectivityService.isOnline()) {
-        console.log('online, loading map');
+        console.log('online, loading map');       
 
         // Load SDK
         window['mapInit'] = () => {
@@ -69,13 +71,14 @@ export class HomePage {
     this.mapInitialized = true;
 
     Geolocation.getCurrentPosition().then(position => {
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);      
 
       let mapOptions = {
         center: latLng, 
         zoom: 15, 
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
+      console.log("PASSEI AQUI");
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     });
 
