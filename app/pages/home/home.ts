@@ -5,6 +5,7 @@ import { Geolocation } from 'ionic-native';
 
 import { ConnectivityService } from '../../providers/connectivity-service/connectivity-service';
 
+
 declare var google; 
 
 @Component({
@@ -13,11 +14,14 @@ declare var google;
 export class HomePage {
 
   @ViewChild('map') mapElement: ElementRef; 
+  
   map: any; 
   mapInitialized: boolean = false; 
   apiKey: any = 'AIzaSyB_MpqeZ9goeJptRq_6PI4wzVJmsQSai2U';
 
-  showMap: boolean = true;
+  showMap: boolean = false;
+
+  fabIconName: string = 'map';
 
   constructor(private navCtrl: NavController, private connectivityService: ConnectivityService) {
     this.loadGoogleMaps();
@@ -25,6 +29,14 @@ export class HomePage {
 
   changeView() {
     this.showMap = !this.showMap;
+
+    if (this.showMap === false ) {
+      this.fabIconName = 'map';      
+    } else {
+      this.fabIconName = 'list';
+      this.loadGoogleMaps();
+    }
+
     console.log('Mudou');
     console.log(this.showMap);
   }
@@ -70,18 +82,43 @@ export class HomePage {
   initMap() {
     this.mapInitialized = true;
 
-    Geolocation.getCurrentPosition().then(position => {
+    Geolocation.getCurrentPosition().then(position => {   
+
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);      
 
       let mapOptions = {
         center: latLng, 
         zoom: 15, 
+        mapTypeControl: false,
+        disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      console.log("PASSEI AQUI");
+      };      
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.addMarker(latLng);
     });
 
+  }
+
+  addMarker(LatLng) {
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP, 
+      position: LatLng
+    });
+
+    let content = '<h4>Information!</h4>';
+
+    this.addInfoWindow(marker, content );
+  }
+
+  addInfoWindow (marker, content ) {
+    let infoWindow = new google.maps.InfoWindow({
+      content:content
+    });
+
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
   }
 
   disableMap() {
